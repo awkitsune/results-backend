@@ -9,4 +9,3 @@ class Application
 fun main(args: Array<String>) {
 	runApplication<Application>(*args)
 }
-//TODO(Define payloads for Spring RestController)

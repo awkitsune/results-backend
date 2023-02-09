@@ -5,7 +5,6 @@ import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -17,7 +16,7 @@ import java.io.IOException
 
 class AuthTokenFilter : OncePerRequestFilter() {
     @Autowired
-    private val jwtUtils: JwtUtils = JwtUtils()
+    private val jwtUtils: JwtUtils? = null
 
     @Autowired
     private val userDetailsService: UserDetailsServiceImpl? = null
@@ -29,8 +28,8 @@ class AuthTokenFilter : OncePerRequestFilter() {
     ) {
         try {
             val jwt = parseJwt(request)
-            if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
-                val username: String = jwtUtils.getUserNameFromJwtToken(jwt)
+            if (jwt != null && jwtUtils!!.validateJwtToken(jwt)) {
+                val username = jwtUtils.getUserNameFromJwtToken(jwt)
                 val userDetails = userDetailsService!!.loadUserByUsername(username)
                 val authentication = UsernamePasswordAuthenticationToken(
                     userDetails, null,
@@ -40,7 +39,7 @@ class AuthTokenFilter : OncePerRequestFilter() {
                 SecurityContextHolder.getContext().authentication = authentication
             }
         } catch (e: Exception) {
-            Companion.logger.error("Cannot set user authentication: {0}", e)
+            Companion.logger.error("Cannot set user authentication: $e")
         }
         filterChain.doFilter(request, response)
     }
@@ -53,6 +52,6 @@ class AuthTokenFilter : OncePerRequestFilter() {
     }
 
     companion object {
-        private val logger: Logger = LoggerFactory.getLogger(AuthTokenFilter::class.java)
+        private val logger = LoggerFactory.getLogger(AuthTokenFilter::class.java)
     }
 }
