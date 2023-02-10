@@ -2,6 +2,8 @@ package icu.ikakosickij.results.backend.controller
 
 import icu.ikakosickij.results.backend.model.Task
 import icu.ikakosickij.results.backend.model.TaskAnswer
+import icu.ikakosickij.results.backend.payload.request.LoginRequest
+import icu.ikakosickij.results.backend.payload.request.TaskAnswerExistenceCheckRequest
 import icu.ikakosickij.results.backend.payload.response.MessageResponse
 import icu.ikakosickij.results.backend.security.services.TaskAnswerService
 import org.springframework.beans.factory.annotation.Autowired
@@ -45,7 +47,7 @@ class TaskAnswerController {
 
     @GetMapping("/list")
     @PreAuthorize("hasRole('ADMIN')")
-    fun taskList(): List<TaskAnswer> {
+    fun taskAnswerList(): List<TaskAnswer> {
         return taskAnswerService!!.getTaskAnswerList()
     }
 
@@ -63,7 +65,11 @@ class TaskAnswerController {
     }
 
     @GetMapping("/count")
-    fun taskCount(): Long {
+    fun taskAnswerCount(): Long {
         return taskAnswerService!!.getTaskAnswerListLength()
+    }
+    @PostMapping("/exists")
+    fun getAnswerExistence(@Valid @RequestBody request: TaskAnswerExistenceCheckRequest): Boolean {
+        return taskAnswerService!!.isTaskAnswerItemValid(request.userId!!, request.taskId!!)
     }
 }

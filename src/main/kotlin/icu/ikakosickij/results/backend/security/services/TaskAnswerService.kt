@@ -43,6 +43,9 @@ class TaskAnswerService {
         return taskAnswerRepository!!.existsById(id)
     }
 
+    fun isTaskAnswerItemValid(userId: String, taskId: String): Boolean {
+        return taskAnswerRepository!!.findByUserAndTaskId(userId, taskId).isNotEmpty()
+    }
     fun getTaskAnswerListLength(): Long {
         return taskAnswerRepository!!.count()
     }
