@@ -12,18 +12,18 @@ import org.springframework.web.bind.annotation.RestController
 class TestController {
     @GetMapping("/all")
     fun allAccess(): String {
-        return "Public Content."
+        return "🤨"
     }
 
     @GetMapping("/user")
-    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun userAccess(): String {
-        return "User Content."
+        return "Страничка пользователя пилится"
     }
 
     @GetMapping("/admin")
     @PreAuthorize("hasRole('ADMIN')")
     fun adminAccess(): String {
-        return "Admin Board."
+        return "Страничка админа пилится, но быстрее"
     }
 }

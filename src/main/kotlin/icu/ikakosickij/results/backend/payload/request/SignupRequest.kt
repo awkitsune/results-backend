@@ -10,7 +10,7 @@ class SignupRequest {
     var username: String? = null
 
     @NotBlank
-    @Size(max = 50)
+    @Size(max = 320)
     @Email
     var email: String? = null
     var roles: Set<String>? = null
