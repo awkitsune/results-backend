@@ -59,6 +59,7 @@ class WebSecurityConfig {
             .authorizeHttpRequests()
             .requestMatchers("/api/auth/**").permitAll()
             .requestMatchers("/api/test/**").permitAll()
+            .requestMatchers("/api/file/download/**").permitAll()
             .anyRequest().authenticated()
         http.authenticationProvider(authenticationProvider())
         http.addFilterBefore(

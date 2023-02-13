@@ -26,7 +26,7 @@ class FileController {
         val loadFile = fileService!!.downloadFile(id)
         return ResponseEntity.ok()
             .contentType(MediaType.parseMediaType(loadFile.fileType!!))
-            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + loadFile.filename + "\"")
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"${loadFile.filename}\"")
             .body(ByteArrayResource(loadFile.file!!))
     }
 }
