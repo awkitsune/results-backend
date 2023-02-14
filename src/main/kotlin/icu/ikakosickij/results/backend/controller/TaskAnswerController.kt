@@ -9,14 +9,7 @@ import icu.ikakosickij.results.backend.security.services.TaskAnswerService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.util.*
 import javax.validation.Valid
 
@@ -68,8 +61,28 @@ class TaskAnswerController {
     fun taskAnswerCount(): Long {
         return taskAnswerService!!.getTaskAnswerListLength()
     }
-    @PostMapping("/exists")
-    fun getAnswerExistence(@Valid @RequestBody request: TaskAnswerExistenceCheckRequest): Boolean {
+    @PostMapping("/filteredlist")
+    fun getAnswerExistence(@Valid @RequestBody request: TaskAnswerExistenceCheckRequest): List<TaskAnswer> {
         return taskAnswerService!!.isTaskAnswerItemValid(request.userId!!, request.taskId!!)
+    }
+
+    @PutMapping("/update/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    fun updateItem(@PathVariable id: String, @Valid @RequestBody taskAnswer: TaskAnswer): ResponseEntity<*> {
+        return if (taskAnswerService!!.isTaskAnswerItemValid(id)) {
+            var updatedId = taskAnswerService!!.updateTaskAnswerItem(id, taskAnswer)
+
+            if (updatedId.isNotEmpty()){
+                ResponseEntity.ok<Any>(
+                    MessageResponse("Updated task answer successfully")
+                )
+            } else {
+                ResponseEntity.badRequest().body<Any>(
+                    MessageResponse("Failed task answer update")
+                )
+            }
+        } else {
+            ResponseEntity.notFound().build<Any>()
+        }
     }
 }
