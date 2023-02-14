@@ -7,6 +7,9 @@ plugins {
 	id 'org.jetbrains.kotlin.plugin.spring' version '1.7.22'
 }
 
+apply plugin: 'java'
+apply plugin: 'io.spring.dependency-management'
+
 group = 'icu.ikakosickij'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
@@ -40,4 +43,8 @@ tasks.withType(KotlinCompile) {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+springBoot {
+	mainClass = "icu.ikakosickij.results.backend.ApplicationKt"
 }
